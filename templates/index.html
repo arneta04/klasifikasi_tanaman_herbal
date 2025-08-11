@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klasifikasi Tanaman Herbal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h2 {
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+    .container {
+      background: linear-gradient(135deg, #ffffff, #f1f8e9);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+    }
+    input[type="file"] {
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2e7d32;
+    }
+    #hasil {
+      margin-top: 25px;
+      font-size: 17px;
+      color: #222;
+    }
+    img.preview {
+      max-width: 300px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Klasifikasi Tanaman Herbal</h2>
+    <input type="file" id="fileInput" accept="image/*"><br>
+    <button onclick="uploadImage()">Klasifikasikan</button>
+    <div id="hasil"></div>
+  </div>
+
+  <script>
+    async function uploadImage() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Pilih gambar terlebih dahulu");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const res = await fetch("/predict", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("hasil").innerText = `Error: ${data.error}`;
+        } else {
+          document.getElementById("hasil").innerHTML =
+            `<img src="${data.image_data_url}" alt="Gambar yang diupload" class="preview"><br>
+             <p><strong>Nama:</strong> ${data.nama}</p>
+             <p><strong>Tanaman:</strong> ${data.tanaman}</p>
+             <p><strong>Confidence:</strong> ${data.confidence}%</p>`;
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("hasil").innerText = "Terjadi kesalahan saat mengirim gambar.";
+      }
+    }
+  </script>
+</body>
+</html>

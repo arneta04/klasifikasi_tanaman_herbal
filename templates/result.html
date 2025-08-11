@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hasil Prediksi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 40px;
+        }
+        img {
+            max-width: 300px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .box {
+            display: inline-block;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Hasil Klasifikasi</h2>
+        <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Gambar Diupload">
+        <p><strong>Nama:</strong> {{ nama }}</p>
+        <p><strong>Tanaman:</strong> {{ tanaman }}</p>
+        <p><strong>Confidence:</strong> {{ confidence }}%</p>
+        <a href="/">Kembali</a>
+    </div>
+</body>
+</html>
